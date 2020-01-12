@@ -30,6 +30,9 @@ class _PsychedialClockState extends State<PsychedialClock> with SingleTickerProv
 	var _hourIn12HourFormat = TimeOfDay.now().hourOfPeriod;
 	Timer _timer;
 	AnimationController _controller;
+	int _gradientIndex = 0;
+	List<Gradient> gradients;
+	List<Gradient> auxGradients;
 
 	final colors = <Color>[
 		Color(0xFFFFE862),
@@ -44,12 +47,29 @@ class _PsychedialClockState extends State<PsychedialClock> with SingleTickerProv
 		widget.model.addListener(_updateModel);
 		_updateTime();
 		_updateModel();
+
+		gradients = [
+      this._getGradient([colors[1], colors[0]]),
+      this._getGradient([colors[2], colors[1]]),
+      this._getGradient([colors[3], colors[2]]),
+      this._getGradient([colors[4], colors[3]]),
+      this._getGradient([colors[0], colors[4]])
+    ];
+
+		auxGradients = new List.from(gradients);
+		auxGradients.addAll(gradients);
+
 		_controller = AnimationController(
 			vsync: this,
-			duration: Duration(milliseconds: 2000)
+			duration: Duration(milliseconds: 5000)
 		)
 		..addStatusListener((status) {
 			if (status == AnimationStatus.completed) {
+				if (_gradientIndex == gradients.length) {
+					_gradientIndex = 0;
+				} else {
+					_gradientIndex++;
+				}
 				_controller.reverse();
 			} else if (status == AnimationStatus.dismissed) {
 				_controller.forward();
@@ -111,14 +131,6 @@ class _PsychedialClockState extends State<PsychedialClock> with SingleTickerProv
 		final date = DateTime.now();
 		final time = DateFormat.Hms().format(date);
 
-		final gradients = [
-      this._getGradient([colors[1], colors[0]]),
-      this._getGradient([colors[2], colors[1]]),
-      this._getGradient([colors[3], colors[2]]),
-      this._getGradient([colors[4], colors[3]]),
-      this._getGradient([colors[0], colors[4]])
-    ];
-
 		return Semantics.fromProperties(
 			properties: SemanticsProperties(
 				label: 'Psychedial clock with time $time',
@@ -131,8 +143,8 @@ class _PsychedialClockState extends State<PsychedialClock> with SingleTickerProv
 				child: Stack(
 					children: [
 						GradientAnimation(
-							begin: gradients[1],
-							end: gradients[0],
+							begin: auxGradients[_gradientIndex + 1],
+							end: auxGradients[_gradientIndex],
 							controller: _controller,
 							childWidget: animateDrawnHand(
 								thickness: 14,
@@ -141,8 +153,8 @@ class _PsychedialClockState extends State<PsychedialClock> with SingleTickerProv
 							),
 						),
 						GradientAnimation(
-							begin: gradients[2],
-							end: gradients[1],
+							begin: auxGradients[_gradientIndex + 2],
+							end: auxGradients[_gradientIndex + 1],
 							controller: _controller,
 							childWidget: animateDrawnHand(
 								thickness: 14,
@@ -151,8 +163,8 @@ class _PsychedialClockState extends State<PsychedialClock> with SingleTickerProv
 							),
 						),
 						GradientAnimation(
-							begin: gradients[3],
-							end: gradients[2],
+							begin: auxGradients[_gradientIndex + 3],
+							end: auxGradients[_gradientIndex + 2],
 							controller: _controller,
 							childWidget: animateDrawnHand(
 								thickness: 14,
