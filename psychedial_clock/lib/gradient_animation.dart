@@ -4,14 +4,14 @@ class GradientAnimation extends StatefulWidget {
 	final LinearGradient begin;
 	final LinearGradient end;
 	final AnimationController controller;
-	final child;
+	final Function childWidget;
 
 	const GradientAnimation({
 		Key key,
 		@required this.controller,
 		@required this.begin,
 		@required this.end,
-		@required this.child,
+		@required this.childWidget,
 	}) : super(key: key);
 
 	@override
@@ -36,12 +36,7 @@ class _GradientAnimationState extends State<GradientAnimation> {
 		return AnimatedBuilder(
 			animation: _animation,
 			builder: (context, _) {
-				return Container(
-					decoration: BoxDecoration(
-						gradient: _animation.value,
-					),
-					child: widget.child
-				);
+				return widget.childWidget(_animation.value);
 			}
 		);
 	}

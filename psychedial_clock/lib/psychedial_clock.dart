@@ -46,8 +46,15 @@ class _PsychedialClockState extends State<PsychedialClock> with SingleTickerProv
 		_updateModel();
 		_controller = AnimationController(
 			vsync: this,
-			duration: Duration(milliseconds: 300)
-		);
+			duration: Duration(milliseconds: 2000)
+		)
+		..addStatusListener((status) {
+			if (status == AnimationStatus.completed) {
+				_controller.reverse();
+			} else if (status == AnimationStatus.dismissed) {
+				_controller.forward();
+			}
+		})..forward();
 		super.initState();
 	}
 
@@ -90,6 +97,15 @@ class _PsychedialClockState extends State<PsychedialClock> with SingleTickerProv
 		);
 	}
 
+	animateDrawnHand({
+		double thickness, double size, angleRadians
+	}) => (gradient) => DrawnHand(
+		gradient: gradient,
+		thickness: thickness,
+		size: size,
+		angleRadians: angleRadians,
+	);
+
 	@override
 	Widget build(BuildContext context) {
 		final date = DateTime.now();
@@ -110,27 +126,39 @@ class _PsychedialClockState extends State<PsychedialClock> with SingleTickerProv
 			),
 			child: Container(
 				decoration: BoxDecoration(
-					color: Colors.black
+					color: Colors.black,
 				),
 				child: Stack(
 					children: [
-						DrawnHand(
-							gradient: gradients[gradients.length - gradients.length],
-							thickness: 14,
-							size: 0.8,
-							angleRadians: _hourIn12HourFormat * radiansPerHour,
+						GradientAnimation(
+							begin: gradients[1],
+							end: gradients[0],
+							controller: _controller,
+							childWidget: animateDrawnHand(
+								thickness: 14,
+								size: 0.8,
+								angleRadians: _hourIn12HourFormat * radiansPerHour,
+							),
 						),
-						DrawnHand(
-							gradient: gradients[gradients.length - gradients.length + 1],
-							thickness: 14,
-							size: 0.9,
-							angleRadians: _now.minute * radiansPerTick
+						GradientAnimation(
+							begin: gradients[2],
+							end: gradients[1],
+							controller: _controller,
+							childWidget: animateDrawnHand(
+								thickness: 14,
+								size: 0.9,
+								angleRadians: _now.minute * radiansPerTick,
+							),
 						),
-						DrawnHand(
-							gradient: gradients[gradients.length - gradients.length + 2],
-							thickness: 14,
-							size: 1,
-							angleRadians: _now.second * radiansPerTick
+						GradientAnimation(
+							begin: gradients[3],
+							end: gradients[2],
+							controller: _controller,
+							childWidget: animateDrawnHand(
+								thickness: 14,
+								size: 1,
+								angleRadians: _now.second * radiansPerTick,
+							),
 						),
 					],
 				),
