@@ -157,7 +157,7 @@ class _PsychedialClockState extends State<PsychedialClock> with SingleTickerProv
 
 		// Digital clock
 		final size = MediaQuery.of(context).size;
-		final fontSize = size.shortestSide / 24;
+		final fontSize = size.shortestSide / 10;
 		final timeStyle = TextStyle(
       fontFamily: 'PressStart2P',
 			fontSize: fontSize,
