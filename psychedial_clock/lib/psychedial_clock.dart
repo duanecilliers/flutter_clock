@@ -163,7 +163,7 @@ class _PsychedialClockState extends State<PsychedialClock> with SingleTickerProv
 			fontSize: fontSize,
 			height: 0.9
     );
-		final timeRect = Rect.fromLTWH(0.0, 0.0, 200.0, 70.0);
+		final timeRect = Rect.fromLTWH(0, 0, 200, 200);
 		final hourStyle = timeStyle.copyWith(
 			foreground: Paint()..shader = hourGradient.createShader(timeRect)
 		);
