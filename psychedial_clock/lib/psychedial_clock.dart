@@ -126,13 +126,13 @@ class _PsychedialClockState extends State<PsychedialClock> with SingleTickerProv
 	List<Gradient> getMinuteGradients () =>
 		new List.from(gradients)
 			..removeAt(0)
-			..add(gradients[gradients.length - 1]);
+			..add(gradients[0]);
 
 	List<Gradient> getSecondsGradients () {
 		var minuteGradients = getMinuteGradients();
 		return new List.from(minuteGradients)
 			..removeAt(0)
-			..add(minuteGradients[gradients.length - 1]);
+			..add(minuteGradients[0]);
 	}
 
 	Function handleAnimationChange (hand) {
