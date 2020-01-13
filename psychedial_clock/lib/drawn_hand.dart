@@ -90,7 +90,7 @@ class _HandPainter extends CustomPainter {
 		canvas.drawCircle(center, length / 1.4, handleTrackPaint);
 
 		final handPaint = Paint()
-			..color = Color(0xFF222222)
+			..color = Color(0xFF000000)
 			..style = PaintingStyle.stroke
 			..strokeWidth = drawLineWidth - 6
 			..strokeCap = StrokeCap.round;
