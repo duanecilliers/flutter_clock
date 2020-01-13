@@ -193,7 +193,7 @@ class _PsychedialClockState extends State<PsychedialClock> with SingleTickerProv
 							onAnimationChange: handleAnimationChange(clockHands.hour),
 							childWidget: animateDrawnHand(
 								thickness: 14,
-								size: 0.8,
+								size: 0.82,
 								angleRadians: _hourIn12HourFormat * radiansPerHour,
 							),
 						),
@@ -203,7 +203,7 @@ class _PsychedialClockState extends State<PsychedialClock> with SingleTickerProv
 							onAnimationChange: handleAnimationChange(clockHands.minute),
 							childWidget: animateDrawnHand(
 								thickness: 14,
-								size: 0.9,
+								size: 0.91,
 								angleRadians: _now.minute * radiansPerTick,
 							),
 						),
