@@ -77,7 +77,8 @@ class _HandPainter extends CustomPainter {
 		final angle = math.pi / math.pi * angleRadians;
     final length = size.shortestSide * 0.5 * handSize;
 		final drawLineWidth = size.shortestSide < 500 ? lineWidth / 1.4 : lineWidth;
-		final rect = new Rect.fromLTWH(0, 0, size.width, size.height);
+		final circleSize = (length * 2 / 1.4);
+		final rect = new Rect.fromLTWH(0, 0, circleSize, circleSize);
 
 		final handleTrackPaint = Paint()
 			..shader = gradient.createShader(rect)
@@ -94,9 +95,8 @@ class _HandPainter extends CustomPainter {
 			..strokeWidth = drawLineWidth - 6
 			..strokeCap = StrokeCap.round;
 
-
 		canvas.drawArc(
-        Rect.fromCenter(center: center, width: (length * 2 / 1.4), height: (length * 2 / 1.4)),
+        Rect.fromCenter(center: center, width: circleSize, height: circleSize),
         -math.pi / 2,
         angle,
         false,
