@@ -6,6 +6,7 @@ class GradientAnimation extends StatefulWidget {
 	final AnimationController controller;
 	final List<Gradient> gradients;
 	final Function childWidget;
+	final Function onAnimationChange;
 
 	const GradientAnimation({
 		Key key,
@@ -14,6 +15,7 @@ class GradientAnimation extends StatefulWidget {
 		// @required this.end,
 		@required this.gradients,
 		@required this.childWidget,
+		@required this.onAnimationChange,
 	}) : super(key: key);
 
 	@override
@@ -77,6 +79,7 @@ class _GradientAnimationState extends State<GradientAnimation> {
 		return AnimatedBuilder(
 			animation: _animation,
 			builder: (context, _) {
+				widget.onAnimationChange(_animation.value);
 				return widget.childWidget(_animation.value);
 			}
 		);

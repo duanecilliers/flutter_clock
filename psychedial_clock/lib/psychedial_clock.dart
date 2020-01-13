@@ -16,6 +16,12 @@ final radiansPerTick = radians(360 / 60);
 /// Total distance traveled by an hour hand, each hour, in radians.
 final radiansPerHour = radians(360 / 12);
 
+enum clockHands {
+	hour,
+	minute,
+	second
+}
+
 class PsychedialClock extends StatefulWidget {
 	const PsychedialClock(this.model);
 
@@ -31,6 +37,8 @@ class _PsychedialClockState extends State<PsychedialClock> with SingleTickerProv
 	Timer _timer;
 	AnimationController _controller;
 	List<Gradient> gradients;
+	LinearGradient hourGradient;
+	LinearGradient minutesGradient;
 
 	final colors = <Color>[
 		Color(0xFFFFE862),
@@ -53,6 +61,8 @@ class _PsychedialClockState extends State<PsychedialClock> with SingleTickerProv
       this._getGradient([colors[4], colors[3]]),
       this._getGradient([colors[0], colors[3]]),
     ];
+		hourGradient = gradients[0];
+		minutesGradient = gradients[1];
 
 		_controller = AnimationController(
 			vsync: this,
@@ -100,6 +110,7 @@ class _PsychedialClockState extends State<PsychedialClock> with SingleTickerProv
 		);
 	}
 
+
 	animateDrawnHand({
 		double thickness, double size, angleRadians
 	}) => (gradient) => DrawnHand(
@@ -124,10 +135,46 @@ class _PsychedialClockState extends State<PsychedialClock> with SingleTickerProv
 			..add(minuteGradients[gradients.length - 1]);
 	}
 
+	Function handleAnimationChange (hand) {
+		return (value) {
+			if (hand == clockHands.hour) {
+				hourGradient = value;
+			} else if (hand == clockHands.minute) {
+				minutesGradient = value;
+			}
+		};
+	}
+
 	@override
 	Widget build(BuildContext context) {
 		final date = DateTime.now();
-		final time = DateFormat.Hms().format(date);
+    final time = DateFormat.Hms().format(date);
+		final hour = date.hour < 10 ? '0' + _now.hour.toString() : _now.hour.toString();
+		final minute = date.minute < 10 ? '0' + _now.minute.toString() : _now.minute.toString();
+		final month = new DateFormat.MMM().format(date);
+		final dayName = new DateFormat.E().format(date);
+		final dayInMonth = new DateFormat.d().format(date);
+
+		// Digital clock
+		final size = MediaQuery.of(context).size;
+		final fontSize = size.shortestSide / 24;
+		final timeStyle = TextStyle(
+      fontFamily: 'PressStart2P',
+			fontSize: fontSize,
+			height: 0.9
+    );
+		final timeRect = Rect.fromLTWH(0.0, 0.0, 200.0, 70.0);
+		final hourStyle = timeStyle.copyWith(
+			foreground: Paint()..shader = hourGradient.createShader(timeRect)
+		);
+		final minutesStyle = timeStyle.copyWith(
+			foreground: Paint()..shader = minutesGradient.createShader(timeRect)
+		);
+		final dateStyle = TextStyle(
+			fontSize: fontSize / 2,
+			textBaseline: TextBaseline.alphabetic,
+			height: 1
+		);
 
 		return Semantics.fromProperties(
 			properties: SemanticsProperties(
@@ -143,6 +190,7 @@ class _PsychedialClockState extends State<PsychedialClock> with SingleTickerProv
 						GradientAnimation(
 							gradients: getHourGradients(),
 							controller: _controller,
+							onAnimationChange: handleAnimationChange(clockHands.hour),
 							childWidget: animateDrawnHand(
 								thickness: 14,
 								size: 0.8,
@@ -152,6 +200,7 @@ class _PsychedialClockState extends State<PsychedialClock> with SingleTickerProv
 						GradientAnimation(
 							gradients: getMinuteGradients(),
 							controller: _controller,
+							onAnimationChange: handleAnimationChange(clockHands.minute),
 							childWidget: animateDrawnHand(
 								thickness: 14,
 								size: 0.9,
@@ -161,10 +210,25 @@ class _PsychedialClockState extends State<PsychedialClock> with SingleTickerProv
 						GradientAnimation(
 							gradients: getSecondsGradients(),
 							controller: _controller,
+							onAnimationChange: handleAnimationChange(clockHands.second),
 							childWidget: animateDrawnHand(
 								thickness: 14,
 								size: 1,
 								angleRadians: _now.second * radiansPerTick,
+							),
+						),
+						Center(
+							child: DefaultTextStyle(
+								style: timeStyle,
+								child: Column(
+									mainAxisAlignment: MainAxisAlignment.center,
+									children: <Widget>[
+										Text(month.toUpperCase(), style: dateStyle.copyWith(letterSpacing: 5)),
+										Text(hour, style: hourStyle.copyWith(height: 1)),
+										Text(minute.toString(), style: minutesStyle),
+										Text(dayName.toUpperCase() + ' ' + dayInMonth.toUpperCase(), style: dateStyle),
+									],
+								),
 							),
 						),
 					],
