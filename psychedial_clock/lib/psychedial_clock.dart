@@ -151,7 +151,7 @@ class _PsychedialClockState extends State<PsychedialClock> with SingleTickerProv
     final time = DateFormat.Hms().format(date);
 		final hour = date.hour < 10 ? '0' + _now.hour.toString() : _now.hour.toString();
 		final minute = date.minute < 10 ? '0' + _now.minute.toString() : _now.minute.toString();
-		final month = new DateFormat.MMM().format(date);
+		final month = new DateFormat.MMMM().format(date);
 		final dayName = new DateFormat.E().format(date);
 		final dayInMonth = new DateFormat.d().format(date);
 
@@ -171,9 +171,10 @@ class _PsychedialClockState extends State<PsychedialClock> with SingleTickerProv
 			foreground: Paint()..shader = minutesGradient.createShader(timeRect)
 		);
 		final dateStyle = TextStyle(
-			fontSize: fontSize / 2,
-			textBaseline: TextBaseline.alphabetic,
-			height: 1
+			fontSize: fontSize / 5,
+			height: 1,
+			letterSpacing: 2,
+			color: Colors.white60,
 		);
 
 		return Semantics.fromProperties(
@@ -223,10 +224,10 @@ class _PsychedialClockState extends State<PsychedialClock> with SingleTickerProv
 								child: Column(
 									mainAxisAlignment: MainAxisAlignment.center,
 									children: <Widget>[
-										Text(month.toUpperCase(), style: dateStyle.copyWith(letterSpacing: 5)),
+										Text(dayInMonth + ' ' + month, style: dateStyle),
 										Text(hour, style: hourStyle.copyWith(height: 1)),
 										Text(minute.toString(), style: minutesStyle),
-										Text(dayName.toUpperCase() + ' ' + dayInMonth.toUpperCase(), style: dateStyle),
+										Text('@todo location', style: dateStyle),
 									],
 								),
 							),
