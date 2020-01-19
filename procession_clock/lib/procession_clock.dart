@@ -14,19 +14,16 @@ import 'calendar.dart';
 enum _Element {
   background,
   text,
-  shadow,
 }
 
 final _lightTheme = {
   _Element.background: Colors.white,
-  _Element.text: Colors.white,
-  _Element.shadow: Colors.black,
+  _Element.text: Colors.black,
 };
 
 final _darkTheme = {
   _Element.background: Colors.black,
   _Element.text: Colors.white,
-  _Element.shadow: Color(0xFF174EA6),
 };
 
 /// A basic digital clock.
@@ -122,7 +119,7 @@ class _ProcessionClockState extends State<ProcessionClock> {
 							Positioned(
 								left: 10,
 								top: 10,
-								child: Calendar(dateUtil: dateUtil,),
+								child: Calendar(color: colors[_Element.text]),
 							),
               Positioned(
 								left: 10,

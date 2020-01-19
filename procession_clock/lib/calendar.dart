@@ -1,115 +1,89 @@
 import 'package:date_util/date_util.dart';
 import 'package:flutter/material.dart';
+import 'utils.dart';
 
-class Calendar extends StatefulWidget {
-  const Calendar({
-    @required this.dateUtil,
-  });
-
-  final DateUtil dateUtil;
-
-  @override
-  _Calendar createState() => _Calendar();
-}
-
-class _Calendar extends State<Calendar> {
-  final monthsPerYear = DateTime.monthsPerYear;
-  final daysPerWeek = DateTime.daysPerWeek;
-
-  @override
-  void initState() {
-    super.initState();
-  }
+class Calendar extends StatelessWidget {
+  const Calendar({this.color});
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
+    final date = DateTime.now();
     return Container(
-      child: BuildMonth(
-        dateUtil: widget.dateUtil,
-        year: 2020,
-        month: 1,
-      ),
+      child: CustomPaint(
+          painter: _PaintYear(
+        dateUtil: DateUtil(),
+        year: date.year,
+        month: date.month,
+        day: date.day,
+        color: color,
+      )),
     );
   }
 }
 
-//
-///@todo track last day point from previously painted month
-//
-class BuildMonth extends StatelessWidget {
-  const BuildMonth({
+class _PaintYear extends CustomPainter {
+  _PaintYear({
     @required this.dateUtil,
     @required this.year,
     @required this.month,
+    @required this.day,
+    @required this.color,
   });
 
   final DateUtil dateUtil;
   final int year;
   final int month;
+  final int day;
+  final Color color;
 
   @override
-  Widget build(BuildContext context) {
-    int daysInMonth = dateUtil.daysInMonth(this.month, this.year);
+  void paint(Canvas canvas, Size size) {
+    final double dayLineHeight = 80;
+    final double verticalSpacing = 24;
+    final double weekPadding = 24;
 
-    return Container(
-			child: CustomPaint(painter: _PaintMonth(dateUtil: dateUtil, year: year, month: month),),
-      // child: Text('monthsPerYear: $monthsPerYear'),
-      // child: Text('daysInMonth: $daysInMonth'),
-      // child: BuildWeek(),
-    );
+    double yOffset = 0;
+    double xOffset = 0;
+
+    final linePaint = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 4
+      ..strokeCap = StrokeCap.square;
+
+    final int daysInYear = dateUtil.leapYear(year) ? 366 : 365;
+    final int daysPastInYear = dateUtil.daysPastInYear(month, day, year);
+
+    for (double i = 0; i < daysInYear; i++) {
+      yOffset++;
+
+      if (i < daysPastInYear) {
+        linePaint.color = color.withAlpha(60);
+      } else {
+        linePaint.color = color.withAlpha(255);
+      }
+
+      if (isInteger(i / 7)) {
+        xOffset = xOffset + weekPadding;
+        yOffset = 0;
+      }
+
+      double nextXOffset = xOffset + weekPadding;
+      double nextYOffset = dayLineHeight * yOffset;
+      double topPoint = nextYOffset + verticalSpacing;
+      Offset topOffset = Offset(nextXOffset, topPoint);
+      double bottomPoint = nextYOffset + dayLineHeight;
+      Offset bottomOffset = Offset(nextXOffset, bottomPoint);
+
+      canvas.drawLine(topOffset, bottomOffset, linePaint);
+    }
   }
-}
 
-class _PaintMonth extends CustomPainter {
-	_PaintMonth({
-		@required this.dateUtil,
-		@required this.year,
-		@required this.month,
-	});
-
-	final DateUtil dateUtil;
-	final int year;
-	final int month;
-
-	bool isInteger(num value) =>
-    value is int || value == value.roundToDouble();
-
-	@override void paint(Canvas canvas, Size size) {
-		final daysInMonth = dateUtil.daysInMonth(month, year);
-		final double dayLineHeight = 40;
-		final double verticalSpacing = 10;
-		final double weekPadding = 16;
-
-		final linePaint = Paint()
-			..color = Color(0xFFFFFFFF)
-			..style = PaintingStyle.stroke
-			..strokeWidth = 2
-			..strokeCap = StrokeCap.square;
-
-		double lastXOffset = 0;
-		double lastYOffset = 0;
-
-		for (double i = 0; i < daysInMonth; i++) {
-			lastYOffset++;
-			if (this.isInteger(i / 7)) {
-				lastXOffset = i / 7 * weekPadding;
-				lastYOffset = 0;
-			}
-
-			double nextXOffset = lastXOffset + weekPadding;
-			double nextYOffset = (dayLineHeight * lastYOffset);
-			double topPoint = nextYOffset + verticalSpacing;
-			Offset topOffset = Offset(nextXOffset, topPoint);
-			double bottomPoint = nextYOffset + dayLineHeight;
-			Offset bottomOffset = Offset(nextXOffset, bottomPoint);
-
-			canvas.drawLine(topOffset, bottomOffset, linePaint);
-		}
-	}
-
-	@override
-  bool shouldRepaint(_PaintMonth oldDelegate) {
-		return oldDelegate.year != year ||
-				oldDelegate.month != month;
-	}
+  @override
+  bool shouldRepaint(_PaintYear oldDelegate) {
+    return oldDelegate.year != year ||
+        oldDelegate.month != month ||
+        oldDelegate.day != day ||
+        oldDelegate.color != color;
+  }
 }
