@@ -9,7 +9,6 @@ class Calendar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('size $size');
     final date = DateTime.now();
     return Container(
       child: CustomPaint(

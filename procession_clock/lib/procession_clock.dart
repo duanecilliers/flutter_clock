@@ -108,7 +108,7 @@ class _ProcessionClockState extends State<ProcessionClock> {
     final fontSize = MediaQuery.of(context).size.width / 10;
     final defaultStyle = TextStyle(
       color: colors[_Element.text],
-      fontFamily: 'PressStart2P',
+      fontFamily: 'NotoSansCondensed',
       fontSize: fontSize,
     );
 
