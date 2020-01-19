@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:math';
 
 import 'package:date_util/date_util.dart';
 import 'package:flutter_clock_helper/model.dart';
@@ -26,6 +27,8 @@ final _darkTheme = {
   _Element.text: Colors.white,
 };
 
+final goldenRatio = (1 + sqrt(5)) / 2;
+
 /// A basic digital clock.
 ///
 /// You can do better than this!
@@ -41,7 +44,7 @@ class ProcessionClock extends StatefulWidget {
 class _ProcessionClockState extends State<ProcessionClock> {
   DateTime _dateTime = DateTime.now();
   Timer _timer;
-	final DateUtil dateUtil = new DateUtil();
+  final DateUtil dateUtil = new DateUtil();
 
   @override
   void initState() {
@@ -110,26 +113,42 @@ class _ProcessionClockState extends State<ProcessionClock> {
     );
 
     return Container(
-      color: colors[_Element.background],
-      child: Center(
-        child: DefaultTextStyle(
-          style: defaultStyle,
-          child: Stack(
-            children: <Widget>[
-							Positioned(
-								left: 10,
-								top: 10,
-								child: Calendar(color: colors[_Element.text]),
-							),
-              Positioned(
-								left: 10,
-								bottom: 10,
-								child: Text('$hour:$minute')
-							),
-            ],
-          ),
-        ),
-      ),
-    );
+        color: colors[_Element.background],
+        padding: EdgeInsets.all(16),
+        child: AspectRatio(
+            aspectRatio: 5 / 3,
+            child: Container(
+                color: Colors.white12,
+                child: LayoutBuilder(
+                  builder: (BuildContext context, BoxConstraints constraints) {
+                    // print('constaints $constraints');
+                    // print('height ${constraints.minHeight}');
+
+                    final height = constraints.minHeight;
+                    final width = constraints.minWidth;
+                    final dockHeight = (height - (height / goldenRatio)) / 2;
+                    final calendarHeight = (height / goldenRatio) + dockHeight;
+
+                    return DefaultTextStyle(
+                      style: defaultStyle,
+                      child: Stack(
+                        children: <Widget>[
+                          Positioned(
+                            left: 10,
+                            top: 10,
+                            child: Calendar(
+                              color: colors[_Element.text],
+                              size: Size(width, calendarHeight),
+                            ),
+                          ),
+                          Positioned(
+                              left: 10,
+                              bottom: 10,
+                              child: Text('$hour:$minute')),
+                        ],
+                      ),
+                    );
+                  },
+                ))));
   }
 }
