@@ -128,17 +128,25 @@ class _PaintYear extends CustomPainter {
       linePaint.strokeWidth = strokeWidth;
 
       if (i < dayOffset) {
-        linePaint.color = color.withAlpha(30);
+        // days from last year
+        linePaint.color = color.withAlpha(60);
+        linePaint.strokeWidth = strokeWidth / 2;
       } else if (i < daysPastInYear + dayOffset - 1) {
+        // days past in current year
         linePaint.color = color.withAlpha(60);
       } else if (i == daysPastInYear + dayOffset - 1) {
+        // current day
         linePaint.color = Colors.blue;
       } else if (i > daysInYear + dayOffset) {
-        linePaint.color = color.withAlpha(30);
+        // days in next year
+        linePaint.color = color.withAlpha(60);
+        linePaint.strokeWidth = strokeWidth - 1;
       } else if (isDayInCurrentMonth(i - dayOffset + 1)) {
+        // days in current month
         linePaint.color = color.withAlpha(255);
         linePaint.strokeWidth = strokeWidth + 1;
       } else {
+        // all other days
         linePaint.color = color.withAlpha(180);
       }
 
