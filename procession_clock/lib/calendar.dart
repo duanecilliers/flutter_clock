@@ -3,14 +3,23 @@ import 'package:flutter/material.dart';
 import 'utils.dart';
 
 class Calendar extends StatelessWidget {
-  const Calendar({@required this.color, @required this.size});
+  const Calendar({@required this.color, @required this.size, @required this.dateUtil});
   final Color color;
   final Size size;
+	final DateUtil dateUtil;
+
+	List<String> days() {
+		return ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+	}
+
+	int initialDayOffset(date) {
+		final firstDayOfYear = dateUtil.day(dateUtil.totalLengthOfDays(1, 1, date.year));
+		return days().indexOf(firstDayOfYear);
+	}
 
   @override
   Widget build(BuildContext context) {
     final date = DateTime.now();
-    final dateUtil = DateUtil();
     final fontSize = size.height / 30;
 
     final double verticalPadding = 16;
@@ -26,6 +35,7 @@ class Calendar extends StatelessWidget {
               dayHeight: dayHeight,
               currentDay: dateUtil.dayOfWeek,
               color: color,
+							days: days(),
             ),
           ]),
           Column(
@@ -38,6 +48,7 @@ class Calendar extends StatelessWidget {
                   year: date.year,
                   month: date.month,
                   day: date.day,
+									dayOffset: initialDayOffset(date),
 									verticalPadding: verticalPadding,
 									dayHeight: dayHeight,
                   color: color,
@@ -58,6 +69,7 @@ class _PaintYear extends CustomPainter {
     @required this.year,
     @required this.month,
     @required this.day,
+		@required this.dayOffset,
 		@required this.verticalPadding,
 		@required this.dayHeight,
     @required this.color,
@@ -68,6 +80,7 @@ class _PaintYear extends CustomPainter {
   final int year;
   final int month;
   final int day;
+	final int dayOffset;
 	final double verticalPadding;
 	final double dayHeight;
   final Color color;
@@ -93,10 +106,14 @@ class _PaintYear extends CustomPainter {
     for (double i = 0; i < lineCount; i++) {
       yOffset++;
 
-      if (i < daysPastInYear) {
+			if (i < dayOffset) {
+				linePaint.color = color.withAlpha(15);
+			} else if (i < daysPastInYear + dayOffset - 1) {
         linePaint.color = color.withAlpha(60);
-      } else if (i > daysInYear) {
-        linePaint.color = color.withAlpha(30);
+			} else if (i == daysPastInYear + dayOffset - 1) {
+				linePaint.color = Colors.blue;
+			} else if (i > daysInYear + dayOffset) {
+        linePaint.color = color.withAlpha(15);
       } else {
         linePaint.color = color.withAlpha(255);
       }
@@ -131,16 +148,17 @@ class DayLabels extends StatelessWidget {
       {@required this.fontSize,
       @required this.dayHeight,
       @required this.currentDay,
-      @required this.color});
+      @required this.color,
+			@required this.days});
   final double fontSize;
   final double dayHeight;
   final int currentDay;
   final Color color;
+	final List<String> days;
 
   @override
   Widget build(BuildContext context) {
     TextStyle style = TextStyle(fontSize: fontSize);
-    final List<String> days = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
     final List<Widget> dayWidgets = [];
 
     for (var i = 0; i < days.length; i++) {
@@ -154,7 +172,7 @@ class DayLabels extends StatelessWidget {
 				alignment: Alignment.center,
         padding: EdgeInsets.only(top: 16, bottom: 16),
         child: Text(
-          days[i],
+          days[i].substring(0, 1),
           style: style,
         ),
       ));

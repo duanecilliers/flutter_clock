@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:math';
 
 import 'package:date_util/date_util.dart';
 import 'package:flutter_clock_helper/model.dart';
@@ -116,7 +115,6 @@ class _ProcessionClockState extends State<ProcessionClock> {
         child: AspectRatio(
             aspectRatio: 5 / 3,
             child: Container(
-                color: Colors.black12,
                 child: LayoutBuilder(
                   builder: (BuildContext context, BoxConstraints constraints) {
                     final height = constraints.minHeight;
@@ -132,6 +130,7 @@ class _ProcessionClockState extends State<ProcessionClock> {
                             left: 10,
                             top: 10,
                             child: Calendar(
+															dateUtil: DateUtil(),
                               color: colors[_Element.text],
                               size: Size(width, calendarHeight),
                             ),
