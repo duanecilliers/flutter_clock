@@ -137,6 +137,7 @@ class _PaintYear extends CustomPainter {
       } else if (i == daysPastInYear + dayOffset - 1) {
         // current day
         linePaint.color = Colors.blue;
+        linePaint.strokeWidth = strokeWidth + 1;
       } else if (i > daysInYear + dayOffset) {
         // days in next year
         linePaint.color = color.withAlpha(60);
