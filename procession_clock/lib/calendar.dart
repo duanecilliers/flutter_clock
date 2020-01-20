@@ -33,8 +33,8 @@ class Calendar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final date = DateTime.now();
-    final fontSize = size.height / 30;
+    final DateTime date = DateTime.now();
+    final double fontSize = size.height / 30;
 
     final double verticalPadding = 16;
     final double dayHeight = (size.height / 7) - verticalPadding;
@@ -115,11 +115,7 @@ class _PaintYear extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final double lineCount = 371;
     final int daysInYear = dateUtil.leapYear(year) ? 366 : 365;
-    final int daysPastInYear = dateUtil.daysPastInYear(
-      month,
-      day,
-      year,
-    );
+    final int daysPastInYear = dateUtil.daysPastInYear(month, day, year);
     final double strokeWidth = 4;
     final double columnCount = daysInYear / 7;
     final double horizontalPadding = (canvasSize.width / columnCount) - 1.2;
@@ -161,18 +157,13 @@ class _PaintYear extends CustomPainter {
         yOffset = 0;
       }
 
-      double nextXOffset = xOffset;
       double nextYOffset = dayHeight * yOffset;
       double topPoint = nextYOffset + verticalPadding;
-      Offset topOffset = Offset(nextXOffset, topPoint);
+      Offset topOffset = Offset(xOffset, topPoint);
       double bottomPoint = nextYOffset + dayHeight;
-      Offset bottomOffset = Offset(nextXOffset, bottomPoint);
+      Offset bottomOffset = Offset(xOffset, bottomPoint);
 
-      canvas.drawLine(
-        topOffset,
-        bottomOffset,
-        linePaint,
-      );
+      canvas.drawLine(topOffset, bottomOffset, linePaint);
     }
   }
 
@@ -210,6 +201,7 @@ class DayLabels extends StatelessWidget {
       } else {
         style = style.copyWith(color: color.withAlpha(100));
       }
+
       dayWidgets.add(Container(
         height: dayHeight,
         alignment: Alignment.center,
