@@ -27,8 +27,6 @@ final _darkTheme = {
   _Element.text: Colors.white,
 };
 
-final goldenRatio = (1 + sqrt(5)) / 2;
-
 /// A basic digital clock.
 ///
 /// You can do better than this!
@@ -118,16 +116,13 @@ class _ProcessionClockState extends State<ProcessionClock> {
         child: AspectRatio(
             aspectRatio: 5 / 3,
             child: Container(
-                color: Colors.white12,
+                color: Colors.black12,
                 child: LayoutBuilder(
                   builder: (BuildContext context, BoxConstraints constraints) {
-                    // print('constaints $constraints');
-                    // print('height ${constraints.minHeight}');
-
                     final height = constraints.minHeight;
                     final width = constraints.minWidth;
-                    final dockHeight = (height - (height / goldenRatio)) / 2;
-                    final calendarHeight = (height / goldenRatio) + dockHeight;
+                    final dockHeight = height / 8;
+                    final calendarHeight = height - dockHeight;
 
                     return DefaultTextStyle(
                       style: defaultStyle,

@@ -10,16 +10,44 @@ class Calendar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final date = DateTime.now();
+    final dateUtil = DateUtil();
+    final fontSize = size.height / 30;
+
+    final double verticalPadding = 16;
+    final double dayHeight = (size.height / 7) - verticalPadding;
+
     return Container(
-      child: CustomPaint(
-          painter: _PaintYear(
-        dateUtil: DateUtil(),
-        year: date.year,
-        month: date.month,
-        day: date.day,
-        color: color,
-        canvasSize: size,
-      )),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Column(children: <Widget>[
+            DayLabels(
+              fontSize: fontSize,
+              dayHeight: dayHeight,
+              currentDay: dateUtil.dayOfWeek,
+              color: color,
+            ),
+          ]),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              Container(
+                child: CustomPaint(
+                    painter: _PaintYear(
+                  dateUtil: dateUtil,
+                  year: date.year,
+                  month: date.month,
+                  day: date.day,
+									verticalPadding: verticalPadding,
+									dayHeight: dayHeight,
+                  color: color,
+                  canvasSize: size,
+                )),
+              )
+            ],
+          )
+        ],
+      ),
     );
   }
 }
@@ -30,6 +58,8 @@ class _PaintYear extends CustomPainter {
     @required this.year,
     @required this.month,
     @required this.day,
+		@required this.verticalPadding,
+		@required this.dayHeight,
     @required this.color,
     @required this.canvasSize,
   });
@@ -38,6 +68,8 @@ class _PaintYear extends CustomPainter {
   final int year;
   final int month;
   final int day;
+	final double verticalPadding;
+	final double dayHeight;
   final Color color;
   final Size canvasSize;
 
@@ -47,10 +79,8 @@ class _PaintYear extends CustomPainter {
     final int daysInYear = dateUtil.leapYear(year) ? 366 : 365;
     final int daysPastInYear = dateUtil.daysPastInYear(month, day, year);
     final double strokeWidth = 2;
-    final double verticalPadding = 16;
     final double columnCount = daysInYear / 7;
     final double horizontalPadding = (canvasSize.width / columnCount) - 1;
-    final double dayLineHeight = (canvasSize.height / 7) - verticalPadding;
 
     double yOffset = 0;
     double xOffset = 0;
@@ -77,10 +107,10 @@ class _PaintYear extends CustomPainter {
       }
 
       double nextXOffset = xOffset;
-      double nextYOffset = dayLineHeight * yOffset;
+      double nextYOffset = dayHeight * yOffset;
       double topPoint = nextYOffset + verticalPadding;
       Offset topOffset = Offset(nextXOffset, topPoint);
-      double bottomPoint = nextYOffset + dayLineHeight;
+      double bottomPoint = nextYOffset + dayHeight;
       Offset bottomOffset = Offset(nextXOffset, bottomPoint);
 
       canvas.drawLine(topOffset, bottomOffset, linePaint);
@@ -93,5 +123,45 @@ class _PaintYear extends CustomPainter {
         oldDelegate.month != month ||
         oldDelegate.day != day ||
         oldDelegate.color != color;
+  }
+}
+
+class DayLabels extends StatelessWidget {
+  const DayLabels(
+      {@required this.fontSize,
+      @required this.dayHeight,
+      @required this.currentDay,
+      @required this.color});
+  final double fontSize;
+  final double dayHeight;
+  final int currentDay;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    TextStyle style = TextStyle(fontSize: fontSize);
+    final List<String> days = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+    final List<Widget> dayWidgets = [];
+
+    for (var i = 0; i < days.length; i++) {
+      if (i - 1 == currentDay) {
+        style = style.copyWith(color: color.withAlpha(255));
+      } else {
+        style = style.copyWith(color: color.withAlpha(100));
+      }
+      dayWidgets.add(Container(
+				height: dayHeight,
+				alignment: Alignment.center,
+        padding: EdgeInsets.only(top: 16, bottom: 16),
+        child: Text(
+          days[i],
+          style: style,
+        ),
+      ));
+    }
+
+    return Column(
+      children: dayWidgets,
+    );
   }
 }
