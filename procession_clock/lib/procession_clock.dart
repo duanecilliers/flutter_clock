@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:math';
 
 import 'package:date_util/date_util.dart';
 import 'package:flutter_clock_helper/model.dart';
@@ -27,9 +26,6 @@ final _darkTheme = {
   _Element.text: Colors.white,
 };
 
-/// A basic digital clock.
-///
-/// You can do better than this!
 class ProcessionClock extends StatefulWidget {
   const ProcessionClock(this.model);
 
@@ -78,20 +74,13 @@ class _ProcessionClockState extends State<ProcessionClock> {
   void _updateTime() {
     setState(() {
       _dateTime = DateTime.now();
-      // Update once per minute. If you want to update every second, use the
-      // following code.
+      // Update once per minute.
       _timer = Timer(
         Duration(minutes: 1) -
             Duration(seconds: _dateTime.second) -
             Duration(milliseconds: _dateTime.millisecond),
         _updateTime,
       );
-      // Update once per second, but make sure to do it at the beginning of each
-      // new second, so that the clock is accurate.
-      // _timer = Timer(
-      //   Duration(seconds: 1) - Duration(milliseconds: _dateTime.millisecond),
-      //   _updateTime,
-      // );
     });
   }
 
@@ -107,70 +96,80 @@ class _ProcessionClockState extends State<ProcessionClock> {
     final month = DateFormat('MMMM').format(_dateTime).toUpperCase();
 
     return Container(
-        color: colors[_Element.background],
-        padding: EdgeInsets.all(16),
-        child: AspectRatio(
-            aspectRatio: 5 / 3,
-            child: Container(child: LayoutBuilder(
-              builder: (BuildContext context, BoxConstraints constraints) {
-                final height = constraints.minHeight;
-                final width = constraints.minWidth;
-                final dockHeight = height / 8;
-                final calendarHeight = height - dockHeight;
+      color: colors[_Element.background],
+      padding: EdgeInsets.all(16),
+      child: AspectRatio(
+        aspectRatio: 5 / 3,
+        child: Container(
+          child: LayoutBuilder(
+            builder: (BuildContext context, BoxConstraints constraints) {
+              final height = constraints.minHeight;
+              final width = constraints.minWidth;
+              final dockHeight = height / 8;
+              final calendarHeight = height - dockHeight;
 
-                final fontSize = height / 8;
-                final int daysInYear =
-                    dateUtil.leapYear(_dateTime.year) ? 366 : 365;
-                final int daysPastInYear = dateUtil.daysPastInYear(
-                    _dateTime.month, _dateTime.day, _dateTime.year);
-                final double percentComplete =
-                    daysPastInYear / daysInYear * 100;
-                final defaultStyle = TextStyle(
-                  color: colors[_Element.text],
-                  fontFamily: 'NotoSansCondensed',
-                  fontSize: fontSize,
-                );
-                final dateFontStyle = TextStyle(
-                  fontSize: fontSize / 3.2,
-                );
+              final fontSize = height / 8;
+              final int daysInYear =
+                  dateUtil.leapYear(_dateTime.year) ? 366 : 365;
+              final int daysPastInYear = dateUtil.daysPastInYear(
+                _dateTime.month,
+                _dateTime.day,
+                _dateTime.year,
+              );
+              final double percentComplete = daysPastInYear / daysInYear * 100;
+              final defaultStyle = TextStyle(
+                color: colors[_Element.text],
+                fontFamily: 'NotoSansCondensed',
+                fontSize: fontSize,
+              );
+              final dateFontStyle = TextStyle(
+                fontSize: fontSize / 3.2,
+              );
 
-                return DefaultTextStyle(
-                  style: defaultStyle,
-                  child: Stack(
-                    children: <Widget>[
-                      Positioned(
-                        left: 10,
-                        top: 10,
-                        child: Calendar(
-                          dateUtil: DateUtil(),
-                          color: colors[_Element.text],
-                          size: Size(width, calendarHeight),
-                        ),
+              return DefaultTextStyle(
+                style: defaultStyle,
+                child: Stack(
+                  children: <Widget>[
+                    Positioned(
+                      left: 10,
+                      top: 10,
+                      child: Calendar(
+                        dateUtil: DateUtil(),
+                        color: colors[_Element.text],
+                        size: Size(width, calendarHeight),
                       ),
-                      Positioned(
-                          left: 40, bottom: 40, child: Text('$hour:$minute')),
-                      Positioned(
-                        right: 20,
-                        bottom: 60,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: <Widget>[
-                            Text(
-                              '$dayOfWeek, ${_dateTime.day} $month',
-                              style: dateFontStyle,
+                    ),
+                    Positioned(
+                      left: 40,
+                      bottom: 40,
+                      child: Text('$hour:$minute'),
+                    ),
+                    Positioned(
+                      right: 20,
+                      bottom: 60,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: <Widget>[
+                          Text(
+                            '$dayOfWeek, ${_dateTime.day} $month',
+                            style: dateFontStyle,
+                          ),
+                          Text(
+                            '${percentComplete.round()}% COMPLETE',
+                            style: dateFontStyle.copyWith(
+                              color: colors[_Element.text].withAlpha(100),
                             ),
-                            Text(
-                              '${percentComplete.round()}% COMPLETE',
-                              style: dateFontStyle.copyWith(
-                                  color: colors[_Element.text].withAlpha(100)),
-                            ),
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                );
-              },
-            ))));
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ),
+      ),
+    );
   }
 }

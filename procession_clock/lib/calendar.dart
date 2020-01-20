@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 import 'utils.dart';
 
 class Calendar extends StatelessWidget {
-  const Calendar(
-      {@required this.color, @required this.size, @required this.dateUtil});
+  const Calendar({
+    @required this.color,
+    @required this.size,
+    @required this.dateUtil,
+  });
   final Color color;
   final Size size;
   final DateUtil dateUtil;
@@ -53,20 +56,21 @@ class Calendar extends StatelessWidget {
             children: <Widget>[
               Container(
                 child: CustomPaint(
-                    painter: _PaintYear(
-                  dateUtil: dateUtil,
-                  year: date.year,
-                  month: date.month,
-                  day: date.day,
-                  dayOffset: initialDayOffset(date),
-                  verticalPadding: verticalPadding,
-                  dayHeight: dayHeight,
-                  color: color,
-                  canvasSize: size,
-                )),
-              )
+                  painter: _PaintYear(
+                    dateUtil: dateUtil,
+                    year: date.year,
+                    month: date.month,
+                    day: date.day,
+                    dayOffset: initialDayOffset(date),
+                    verticalPadding: verticalPadding,
+                    dayHeight: dayHeight,
+                    color: color,
+                    canvasSize: size,
+                  ),
+                ),
+              ),
             ],
-          )
+          ),
         ],
       ),
     );
@@ -110,7 +114,11 @@ class _PaintYear extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final double lineCount = 371;
     final int daysInYear = dateUtil.leapYear(year) ? 366 : 365;
-    final int daysPastInYear = dateUtil.daysPastInYear(month, day, year);
+    final int daysPastInYear = dateUtil.daysPastInYear(
+      month,
+      day,
+      year,
+    );
     final double strokeWidth = 4;
     final double columnCount = daysInYear / 7;
     final double horizontalPadding = (canvasSize.width / columnCount) - 1.2;
@@ -163,7 +171,11 @@ class _PaintYear extends CustomPainter {
       double bottomPoint = nextYOffset + dayHeight;
       Offset bottomOffset = Offset(nextXOffset, bottomPoint);
 
-      canvas.drawLine(topOffset, bottomOffset, linePaint);
+      canvas.drawLine(
+        topOffset,
+        bottomOffset,
+        linePaint,
+      );
     }
   }
 
@@ -177,12 +189,13 @@ class _PaintYear extends CustomPainter {
 }
 
 class DayLabels extends StatelessWidget {
-  const DayLabels(
-      {@required this.fontSize,
-      @required this.dayHeight,
-      @required this.currentDay,
-      @required this.color,
-      @required this.days});
+  const DayLabels({
+    @required this.fontSize,
+    @required this.dayHeight,
+    @required this.currentDay,
+    @required this.color,
+    @required this.days,
+  });
   final double fontSize;
   final double dayHeight;
   final int currentDay;
