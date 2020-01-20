@@ -91,9 +91,9 @@ class _PaintYear extends CustomPainter {
     final double lineCount = 371;
     final int daysInYear = dateUtil.leapYear(year) ? 366 : 365;
     final int daysPastInYear = dateUtil.daysPastInYear(month, day, year);
-    final double strokeWidth = 2;
+    final double strokeWidth = 4;
     final double columnCount = daysInYear / 7;
-    final double horizontalPadding = (canvasSize.width / columnCount) - 1;
+    final double horizontalPadding = (canvasSize.width / columnCount) - 1.2;
 
     double yOffset = 0;
     double xOffset = 0;
@@ -107,13 +107,13 @@ class _PaintYear extends CustomPainter {
       yOffset++;
 
 			if (i < dayOffset) {
-				linePaint.color = color.withAlpha(15);
+				linePaint.color = color.withAlpha(30);
 			} else if (i < daysPastInYear + dayOffset - 1) {
         linePaint.color = color.withAlpha(60);
 			} else if (i == daysPastInYear + dayOffset - 1) {
 				linePaint.color = Colors.blue;
 			} else if (i > daysInYear + dayOffset) {
-        linePaint.color = color.withAlpha(15);
+        linePaint.color = color.withAlpha(30);
       } else {
         linePaint.color = color.withAlpha(255);
       }
