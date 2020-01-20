@@ -106,9 +106,10 @@ class _ProcessionClockState extends State<ProcessionClock> {
     final dayOfWeek = DateFormat('EEEE').format(_dateTime).toUpperCase();
     final month = DateFormat('MMMM').format(_dateTime).toUpperCase();
     final fontSize = MediaQuery.of(context).size.width / 10;
-		final int daysInYear = dateUtil.leapYear(_dateTime.year) ? 366 : 365;
-		final int daysPastInYear = dateUtil.daysPastInYear(_dateTime.month, _dateTime.day, _dateTime.year);
-		final double percentComplete = daysPastInYear / daysInYear * 100;
+    final int daysInYear = dateUtil.leapYear(_dateTime.year) ? 366 : 365;
+    final int daysPastInYear =
+        dateUtil.daysPastInYear(_dateTime.month, _dateTime.day, _dateTime.year);
+    final double percentComplete = daysPastInYear / daysInYear * 100;
     final defaultStyle = TextStyle(
       color: colors[_Element.text],
       fontFamily: 'NotoSansCondensed',
@@ -149,7 +150,7 @@ class _ProcessionClockState extends State<ProcessionClock> {
                         right: 10,
                         bottom: 40,
                         child: Column(
-													crossAxisAlignment: CrossAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.end,
                           children: <Widget>[
                             Text(
                               '$dayOfWeek, ${_dateTime.day} $month',
@@ -157,7 +158,8 @@ class _ProcessionClockState extends State<ProcessionClock> {
                             ),
                             Text(
                               '${percentComplete.round()}% COMPLETE',
-                              style: dateFontStyle.copyWith(color: colors[_Element.text].withAlpha(100)),
+                              style: dateFontStyle.copyWith(
+                                  color: colors[_Element.text].withAlpha(100)),
                             ),
                           ],
                         ),

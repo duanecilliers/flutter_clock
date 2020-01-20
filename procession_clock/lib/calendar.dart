@@ -3,19 +3,29 @@ import 'package:flutter/material.dart';
 import 'utils.dart';
 
 class Calendar extends StatelessWidget {
-  const Calendar({@required this.color, @required this.size, @required this.dateUtil});
+  const Calendar(
+      {@required this.color, @required this.size, @required this.dateUtil});
   final Color color;
   final Size size;
-	final DateUtil dateUtil;
+  final DateUtil dateUtil;
 
-	List<String> days() {
-		return ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-	}
+  List<String> days() {
+    return [
+      'Sunday',
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday'
+    ];
+  }
 
-	int initialDayOffset(date) {
-		final firstDayOfYear = dateUtil.day(dateUtil.totalLengthOfDays(1, 1, date.year));
-		return days().indexOf(firstDayOfYear);
-	}
+  int initialDayOffset(date) {
+    final firstDayOfYear =
+        dateUtil.day(dateUtil.totalLengthOfDays(1, 1, date.year));
+    return days().indexOf(firstDayOfYear);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +45,7 @@ class Calendar extends StatelessWidget {
               dayHeight: dayHeight,
               currentDay: dateUtil.dayOfWeek,
               color: color,
-							days: days(),
+              days: days(),
             ),
           ]),
           Column(
@@ -48,9 +58,9 @@ class Calendar extends StatelessWidget {
                   year: date.year,
                   month: date.month,
                   day: date.day,
-									dayOffset: initialDayOffset(date),
-									verticalPadding: verticalPadding,
-									dayHeight: dayHeight,
+                  dayOffset: initialDayOffset(date),
+                  verticalPadding: verticalPadding,
+                  dayHeight: dayHeight,
                   color: color,
                   canvasSize: size,
                 )),
@@ -69,9 +79,9 @@ class _PaintYear extends CustomPainter {
     @required this.year,
     @required this.month,
     @required this.day,
-		@required this.dayOffset,
-		@required this.verticalPadding,
-		@required this.dayHeight,
+    @required this.dayOffset,
+    @required this.verticalPadding,
+    @required this.dayHeight,
     @required this.color,
     @required this.canvasSize,
   });
@@ -80,9 +90,9 @@ class _PaintYear extends CustomPainter {
   final int year;
   final int month;
   final int day;
-	final int dayOffset;
-	final double verticalPadding;
-	final double dayHeight;
+  final int dayOffset;
+  final double verticalPadding;
+  final double dayHeight;
   final Color color;
   final Size canvasSize;
 
@@ -106,13 +116,13 @@ class _PaintYear extends CustomPainter {
     for (double i = 0; i < lineCount; i++) {
       yOffset++;
 
-			if (i < dayOffset) {
-				linePaint.color = color.withAlpha(30);
-			} else if (i < daysPastInYear + dayOffset - 1) {
+      if (i < dayOffset) {
+        linePaint.color = color.withAlpha(30);
+      } else if (i < daysPastInYear + dayOffset - 1) {
         linePaint.color = color.withAlpha(60);
-			} else if (i == daysPastInYear + dayOffset - 1) {
-				linePaint.color = Colors.blue;
-			} else if (i > daysInYear + dayOffset) {
+      } else if (i == daysPastInYear + dayOffset - 1) {
+        linePaint.color = Colors.blue;
+      } else if (i > daysInYear + dayOffset) {
         linePaint.color = color.withAlpha(30);
       } else {
         linePaint.color = color.withAlpha(255);
@@ -149,12 +159,12 @@ class DayLabels extends StatelessWidget {
       @required this.dayHeight,
       @required this.currentDay,
       @required this.color,
-			@required this.days});
+      @required this.days});
   final double fontSize;
   final double dayHeight;
   final int currentDay;
   final Color color;
-	final List<String> days;
+  final List<String> days;
 
   @override
   Widget build(BuildContext context) {
@@ -168,8 +178,8 @@ class DayLabels extends StatelessWidget {
         style = style.copyWith(color: color.withAlpha(100));
       }
       dayWidgets.add(Container(
-				height: dayHeight,
-				alignment: Alignment.center,
+        height: dayHeight,
+        alignment: Alignment.center,
         padding: EdgeInsets.only(top: 16, bottom: 16),
         child: Text(
           days[i].substring(0, 1),
