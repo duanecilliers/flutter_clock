@@ -96,6 +96,16 @@ class _PaintYear extends CustomPainter {
   final Color color;
   final Size canvasSize;
 
+  bool isDayInCurrentMonth(double day) {
+    int daysInPreviousMonths = 0;
+    int daysInCurrentMonth = dateUtil.daysInMonth(month, year);
+    for (var i = 1; i < month; i++) {
+      daysInPreviousMonths += dateUtil.daysInMonth(i, year);
+    }
+    return day > daysInPreviousMonths &&
+        day <= daysInPreviousMonths + daysInCurrentMonth;
+  }
+
   @override
   void paint(Canvas canvas, Size size) {
     final double lineCount = 371;
@@ -110,11 +120,12 @@ class _PaintYear extends CustomPainter {
 
     final linePaint = Paint()
       ..style = PaintingStyle.stroke
-      ..strokeWidth = strokeWidth
       ..strokeCap = StrokeCap.square;
 
     for (double i = 0; i < lineCount; i++) {
       yOffset++;
+      // reset strokeWidth
+      linePaint.strokeWidth = strokeWidth;
 
       if (i < dayOffset) {
         linePaint.color = color.withAlpha(30);
@@ -124,8 +135,11 @@ class _PaintYear extends CustomPainter {
         linePaint.color = Colors.blue;
       } else if (i > daysInYear + dayOffset) {
         linePaint.color = color.withAlpha(30);
-      } else {
+      } else if (isDayInCurrentMonth(i - dayOffset + 1)) {
         linePaint.color = color.withAlpha(255);
+        linePaint.strokeWidth = strokeWidth + 1;
+      } else {
+        linePaint.color = color.withAlpha(180);
       }
 
       if (isInteger(i / 7)) {
