@@ -1,5 +1,6 @@
 import 'package:date_util/date_util.dart';
 import 'package:flutter/material.dart';
+
 import 'utils.dart';
 
 class Calendar extends StatelessWidget {
@@ -142,10 +143,6 @@ class _PaintYear extends CustomPainter {
       } else if (i < daysPastInYear + dayOffset - 1) {
         // days past in current year
         linePaint.color = color.withAlpha(60);
-      } else if (i == daysPastInYear + dayOffset - 1) {
-        // current day
-        linePaint.color = Colors.blue;
-        linePaint.strokeWidth = strokeWidth + 1;
       } else if (i > daysInYear + dayOffset) {
         // days in next year
         linePaint.color = color.withAlpha(60);
