@@ -105,19 +105,6 @@ class _ProcessionClockState extends State<ProcessionClock> {
     final minute = DateFormat('mm').format(_dateTime);
     final dayOfWeek = DateFormat('EEEE').format(_dateTime).toUpperCase();
     final month = DateFormat('MMMM').format(_dateTime).toUpperCase();
-    final fontSize = MediaQuery.of(context).size.width / 10;
-    final int daysInYear = dateUtil.leapYear(_dateTime.year) ? 366 : 365;
-    final int daysPastInYear =
-        dateUtil.daysPastInYear(_dateTime.month, _dateTime.day, _dateTime.year);
-    final double percentComplete = daysPastInYear / daysInYear * 100;
-    final defaultStyle = TextStyle(
-      color: colors[_Element.text],
-      fontFamily: 'NotoSansCondensed',
-      fontSize: fontSize,
-    );
-    final dateFontStyle = TextStyle(
-      fontSize: fontSize / 3.2,
-    );
 
     return Container(
         color: colors[_Element.background],
@@ -130,6 +117,22 @@ class _ProcessionClockState extends State<ProcessionClock> {
                 final width = constraints.minWidth;
                 final dockHeight = height / 8;
                 final calendarHeight = height - dockHeight;
+
+                final fontSize = height / 8;
+                final int daysInYear =
+                    dateUtil.leapYear(_dateTime.year) ? 366 : 365;
+                final int daysPastInYear = dateUtil.daysPastInYear(
+                    _dateTime.month, _dateTime.day, _dateTime.year);
+                final double percentComplete =
+                    daysPastInYear / daysInYear * 100;
+                final defaultStyle = TextStyle(
+                  color: colors[_Element.text],
+                  fontFamily: 'NotoSansCondensed',
+                  fontSize: fontSize,
+                );
+                final dateFontStyle = TextStyle(
+                  fontSize: fontSize / 3.2,
+                );
 
                 return DefaultTextStyle(
                   style: defaultStyle,
@@ -145,10 +148,10 @@ class _ProcessionClockState extends State<ProcessionClock> {
                         ),
                       ),
                       Positioned(
-                          left: 40, bottom: 10, child: Text('$hour:$minute')),
+                          left: 40, bottom: 40, child: Text('$hour:$minute')),
                       Positioned(
-                        right: 10,
-                        bottom: 40,
+                        right: 20,
+                        bottom: 60,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: <Widget>[
