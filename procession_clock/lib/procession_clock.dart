@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:math';
 
 import 'package:date_util/date_util.dart';
 import 'package:flutter_clock_helper/model.dart';
@@ -102,11 +103,19 @@ class _ProcessionClockState extends State<ProcessionClock> {
     final hour =
         DateFormat(widget.model.is24HourFormat ? 'HH' : 'hh').format(_dateTime);
     final minute = DateFormat('mm').format(_dateTime);
+    final dayOfWeek = DateFormat('EEEE').format(_dateTime).toUpperCase();
+    final month = DateFormat('MMMM').format(_dateTime).toUpperCase();
     final fontSize = MediaQuery.of(context).size.width / 10;
+		final int daysInYear = dateUtil.leapYear(_dateTime.year) ? 366 : 365;
+		final int daysPastInYear = dateUtil.daysPastInYear(_dateTime.month, _dateTime.day, _dateTime.year);
+		final double percentComplete = daysPastInYear / daysInYear * 100;
     final defaultStyle = TextStyle(
       color: colors[_Element.text],
       fontFamily: 'NotoSansCondensed',
       fontSize: fontSize,
+    );
+    final dateFontStyle = TextStyle(
+      fontSize: fontSize / 3.2,
     );
 
     return Container(
@@ -114,35 +123,49 @@ class _ProcessionClockState extends State<ProcessionClock> {
         padding: EdgeInsets.all(16),
         child: AspectRatio(
             aspectRatio: 5 / 3,
-            child: Container(
-                child: LayoutBuilder(
-                  builder: (BuildContext context, BoxConstraints constraints) {
-                    final height = constraints.minHeight;
-                    final width = constraints.minWidth;
-                    final dockHeight = height / 8;
-                    final calendarHeight = height - dockHeight;
+            child: Container(child: LayoutBuilder(
+              builder: (BuildContext context, BoxConstraints constraints) {
+                final height = constraints.minHeight;
+                final width = constraints.minWidth;
+                final dockHeight = height / 8;
+                final calendarHeight = height - dockHeight;
 
-                    return DefaultTextStyle(
-                      style: defaultStyle,
-                      child: Stack(
-                        children: <Widget>[
-                          Positioned(
-                            left: 10,
-                            top: 10,
-                            child: Calendar(
-															dateUtil: DateUtil(),
-                              color: colors[_Element.text],
-                              size: Size(width, calendarHeight),
-                            ),
-                          ),
-                          Positioned(
-                              left: 10,
-                              bottom: 10,
-                              child: Text('$hour:$minute')),
-                        ],
+                return DefaultTextStyle(
+                  style: defaultStyle,
+                  child: Stack(
+                    children: <Widget>[
+                      Positioned(
+                        left: 10,
+                        top: 10,
+                        child: Calendar(
+                          dateUtil: DateUtil(),
+                          color: colors[_Element.text],
+                          size: Size(width, calendarHeight),
+                        ),
                       ),
-                    );
-                  },
-                ))));
+                      Positioned(
+                          left: 40, bottom: 10, child: Text('$hour:$minute')),
+                      Positioned(
+                        right: 10,
+                        bottom: 40,
+                        child: Column(
+													crossAxisAlignment: CrossAxisAlignment.end,
+                          children: <Widget>[
+                            Text(
+                              '$dayOfWeek, ${_dateTime.day} $month',
+                              style: dateFontStyle,
+                            ),
+                            Text(
+                              '${percentComplete.round()}% COMPLETE',
+                              style: dateFontStyle.copyWith(color: colors[_Element.text].withAlpha(100)),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                );
+              },
+            ))));
   }
 }
