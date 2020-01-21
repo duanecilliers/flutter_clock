@@ -36,9 +36,11 @@ class ProcessionClock extends StatefulWidget {
 }
 
 class _ProcessionClockState extends State<ProcessionClock> {
-  DateTime _dateTime = DateTime.now();
+  // DateTime _dateTime = DateTime.now();
+  DateTime _dateTime = DateTime(2020, 1, 1);
+
   Timer _timer;
-  final DateUtil dateUtil = new DateUtil();
+  DateUtil dateUtil = new DateUtil();
 
   @override
   void initState() {
@@ -73,7 +75,11 @@ class _ProcessionClockState extends State<ProcessionClock> {
 
   void _updateTime() {
     setState(() {
+      // This is demo code, uncomment to witness
+      // _dateTime = DateTime(2020, month, day++, hour++, minute++);
+
       _dateTime = DateTime.now();
+      dateUtil = new DateUtil();
       // Update once per minute.
       _timer = Timer(
         Duration(minutes: 1) -
@@ -81,6 +87,13 @@ class _ProcessionClockState extends State<ProcessionClock> {
             Duration(milliseconds: _dateTime.millisecond),
         _updateTime,
       );
+
+      // Once per second, for demo purposes
+      // _timer = Timer(
+      //   Duration(milliseconds: 50),
+      //   // Duration(seconds: 1) - Duration(milliseconds: _dateTime.millisecond),
+      //   _updateTime,
+      // );
     });
   }
 
@@ -97,7 +110,6 @@ class _ProcessionClockState extends State<ProcessionClock> {
 
     return Container(
       color: colors[_Element.background],
-      padding: EdgeInsets.all(16),
       child: AspectRatio(
         aspectRatio: 5 / 3,
         child: Container(
@@ -105,7 +117,7 @@ class _ProcessionClockState extends State<ProcessionClock> {
             builder: (BuildContext context, BoxConstraints constraints) {
               final height = constraints.minHeight;
               final width = constraints.minWidth;
-              final dockHeight = height / 8;
+              final dockHeight = height / 10;
               final calendarHeight = height - dockHeight;
 
               final fontSize = height / 8;
@@ -134,19 +146,20 @@ class _ProcessionClockState extends State<ProcessionClock> {
                       left: 10,
                       top: 10,
                       child: Calendar(
-                        dateUtil: DateUtil(),
+                        date: _dateTime,
+                        dateUtil: dateUtil,
                         color: colors[_Element.text],
                         size: Size(width, calendarHeight),
                       ),
                     ),
                     Positioned(
-                      left: 40,
-                      bottom: 40,
+                      left: 30,
+                      bottom: 25,
                       child: Text('$hour:$minute'),
                     ),
                     Positioned(
-                      right: 20,
-                      bottom: 60,
+                      right: 30,
+                      bottom: 40,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: <Widget>[

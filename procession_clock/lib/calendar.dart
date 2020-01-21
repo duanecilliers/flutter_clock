@@ -5,10 +5,13 @@ import 'utils.dart';
 
 class Calendar extends StatelessWidget {
   const Calendar({
+    @required this.date,
     @required this.color,
     @required this.size,
     @required this.dateUtil,
   });
+
+  final DateTime date;
   final Color color;
   final Size size;
   final DateUtil dateUtil;
@@ -33,10 +36,9 @@ class Calendar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final DateTime date = DateTime.now();
     final double fontSize = size.height / 30;
 
-    final double verticalPadding = 16;
+    final double verticalPadding = 12;
     final double dayHeight = (size.height / 7) - verticalPadding;
 
     return Container(
@@ -47,7 +49,7 @@ class Calendar extends StatelessWidget {
             DayLabels(
               fontSize: fontSize,
               dayHeight: dayHeight,
-              currentDay: dateUtil.dayOfWeek,
+              currentDay: dateUtil.dayOfWeek + 1,
               color: color,
               days: days(),
             ),
@@ -135,18 +137,18 @@ class _PaintYear extends CustomPainter {
       if (i < dayOffset) {
         // days from last year
         linePaint.color = color.withAlpha(60);
-        linePaint.strokeWidth = strokeWidth / 2;
+        linePaint.strokeWidth = strokeWidth - 3;
       } else if (i < daysPastInYear + dayOffset - 1) {
         // days past in current year
         linePaint.color = color.withAlpha(60);
       } else if (i > daysInYear + dayOffset) {
         // days in next year
         linePaint.color = color.withAlpha(60);
-        linePaint.strokeWidth = strokeWidth - 1;
+        linePaint.strokeWidth = strokeWidth - 3;
       } else if (isDayInCurrentMonth(i - dayOffset + 1)) {
         // days in current month
         linePaint.color = color.withAlpha(255);
-        linePaint.strokeWidth = strokeWidth + 1;
+        linePaint.strokeWidth = strokeWidth + 3;
       } else {
         // all other days
         linePaint.color = color.withAlpha(180);
