@@ -7,15 +7,15 @@
 
 ### Demo
 
-<img src='procession_clock/procession_clock_demo.gif' width='350'>
+<img src='procession_clock/procession_clock_demo.gif'>
 
 ### Dark
 
-<img src='procession_clock/procession_clock_dark.png' width='350'>
+<img src='procession_clock/procession_clock_dark.png'>
 
 ### Light
 
-<img src='procession_clock/procession_clock_light.png' width='350'>
+<img src='procession_clock/procession_clock_light.png'>
 
 ## [Weather Clock](https://github.com/duanecilliers/flutter_clock/tree/master/analog_clock_weather)
 
