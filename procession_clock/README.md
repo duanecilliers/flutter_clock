@@ -1,16 +1,17 @@
-# procession_clock
+# Procession Clock
 
-A new Flutter project.
+Submission for the [Flutter clock challenge](https://flutter.dev/clock).
 
-## Getting Started
+:mortar_board: [Certificate of completion](https://www.credential.net/1e0ee114-5447-43b1-a4e3-99ea1b3b8467?key=5422a08a5f090aacb77a3ff64ad602343efb98ab1beeb3aa4571f601be656743)
 
-This project is a starting point for a Flutter application.
+### Demo
 
-A few resources to get you started if this is your first Flutter project:
+<img src='procession_clock_demo.gif' width='350'>
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+### Dark
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+<img src='procession_clock_dark.png' width='350'>
+
+### Light
+
+<img src='procession_clock_light.png' width='350'>
